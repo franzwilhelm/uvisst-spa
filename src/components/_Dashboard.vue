@@ -5,18 +5,21 @@
       <h1>Uvisst</h1>
       <h2>{{ now }}</h2>
       <transition-group name="jump">
-        <button v-for="note in today" @click="show(note)" class="button button--small" type="button" name="button" :key="note.createdAt">{{ clock(note.createdAt) }}</button>
+        <button v-for="note in today" @click="show(note)" class="button button--small" type="button" name="button" :key="note.createdAt">{{ clock(note.createdAt) }}<i v-if="note.emoji" class="em" :class="note.emoji"/></button>
         <button class="button button--small" :class="addClass" type="button" name="button" @click="toggleEdit()" key="+">{{ newInProgress ? (now.substring(0,5)) : '+' }}</button>
       </transition-group>
+
       <transition name="scale-down" mode="out-in">
         <div v-if="newInProgress">
-          <textarea v-model="data" name="name" placeholder="Skriv noe du ikke vil skal være uvisst i fremtiden"></textarea>
+          <textarea v-model="newNote.data" name="name" placeholder="Skriv noe du ikke vil skal være uvisst i fremtiden"></textarea>
+          <emoji-picker @emojiUpdate="updateEmoji"/>
           <div>
-            <button class="button button--positive" type="button" name="button" @click="createNote(data);clear()">Lagre</button>
+            <button class="button button--positive" type="button" name="button" @click="createNote(newNote);clear()">Lagre</button>
             <button class="button button--negative" type="button" name="button" @click="clear()">Forkast</button>
           </div>
         </div>
       </transition>
+
       <div class="box" v-if="display"> {{display.data}} </div>
       <div v-for="day in days">
         <h2>{{ date(day.day) }}</h2>
@@ -32,15 +35,19 @@
 import { mapActions, mapGetters } from 'vuex';
 import moment from 'moment';
 import UNote from './UNote';
+import EmojiPicker from './EmojiPicker';
 
 export default {
   name: 'HelloWorld',
-  components: { UNote },
+  components: { UNote, EmojiPicker },
   data() {
     return {
       newInProgress: false,
       display: null,
-      data: '',
+      newNote: {
+        emoji: '',
+        data: '',
+      },
       now: 'uvisst',
     };
   },
@@ -61,7 +68,10 @@ export default {
     ...mapActions(['createNote', 'deleteNote', 'fetchNotes']),
     clear() {
       this.newInProgress = false;
-      this.data = '';
+      this.newNote = {
+        emoji: '',
+        data: '',
+      };
     },
     show(note) {
       this.display = note;
@@ -83,6 +93,9 @@ export default {
         .slice(0, 2)
         .reduce((a, b) => `${a} ${b}`);
     },
+    updateEmoji(emoji) {
+      this.newNote.emoji = emoji;
+    },
   },
 };
 </script>
@@ -94,14 +107,15 @@ $color-gray: #c8c8c8;
 $color-white: #fff;
 $color-background: rgb(235, 241, 247);
 $color-dark: #231a3d;
-$color-main: #1633ff;
+$color-primary: #1633ff;
+$margin: 30px;
 
 * {
   font-family: 'Montserrat', sans-serif;
-  color: $color-main;
+  color: $color-primary;
 }
 body {
-  background: linear-gradient(90deg, $color-main, #282e67);
+  background: linear-gradient(90deg, $color-primary, #282e67);
 }
 textarea {
   height: 120px;
@@ -110,8 +124,7 @@ textarea {
   background: $color-white;
   font-size: 16px;
   resize: none;
-  margin-top: 12px;
-  margin-bottom: 12px;
+  margin-top: $margin;
   width: 100%;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -166,7 +179,7 @@ textarea {
   }
   &--small {
     color: $color-dark;
-    margin: 6px 6px 0px 0px;
+    margin: 20px 6px 0px 0px;
     width: 60px;
     height: 35px;
     padding: 6px;
@@ -193,6 +206,6 @@ textarea {
   padding: 20px;
   width: 100%;
   box-sizing: border-box;
-  margin-top: 10px;
+  margin-top: $margin;
 }
 </style>

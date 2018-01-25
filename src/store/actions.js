@@ -2,7 +2,7 @@ import API from '@/api';
 
 export default {
   async createNote({ commit }, data) {
-    const response = await API.createNote({ data });
+    const response = await API.createNote(data);
     commit('ADD_NOTE', response.data[0]);
   },
   async fetchNotes({ commit }) {
