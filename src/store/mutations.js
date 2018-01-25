@@ -3,6 +3,6 @@ export default {
     state.notes = data;
   },
   ADD_NOTE(state, data) {
-    state.notes = [...state.notes, data];
+    state.notes = [data, ...state.notes];
   },
 };
