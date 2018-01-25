@@ -94,13 +94,14 @@ $color-gray: #c8c8c8;
 $color-white: #fff;
 $color-background: rgb(235, 241, 247);
 $color-dark: #231a3d;
+$color-main: #1633ff;
 
 * {
   font-family: 'Montserrat', sans-serif;
-  color: #1633ff;
+  color: $color-main;
 }
 body {
-  background: linear-gradient(90deg, #0069ff, #1633ff);
+  background: linear-gradient(90deg, $color-main, #282e67);
 }
 textarea {
   height: 120px;
@@ -167,6 +168,7 @@ textarea {
     color: $color-dark;
     margin: 6px 6px 0px 0px;
     width: 60px;
+    height: 35px;
     padding: 6px;
     background: none;
   }
@@ -192,24 +194,5 @@ textarea {
   width: 100%;
   box-sizing: border-box;
   margin-top: 10px;
-  // .arrow {
-  //   border-style: solid;
-  //   position: absolute;
-  // }
 }
-
-// .bottom {
-//   border-color: #c8c8c8 transparent transparent transparent;
-//   border-width: 8px 8px 0px 8px;
-//   bottom: -8px;
-//   &:after {
-//     border-color: #f8f8f8 transparent transparent transparent;
-//     border-style: solid;
-//     border-width: 7px 7px 0px 7px;
-//     bottom: 1px;
-//     content: '';
-//     position: absolute;
-//     left: -7px;
-//   }
-// }
 </style>
