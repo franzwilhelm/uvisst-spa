@@ -1,10 +1,9 @@
 <template>
-  <div class="content">
-    <h1>Uvisst</h1>
 
-    <div>
+  <div class="wrapper">
+    <div class="content">
+      <h1>Uvisst</h1>
       <h2>{{ now }}</h2>
-      <p v-if="display">{{display.data}}</p>
       <transition-group name="jump">
         <button v-for="note in today" @click="show(note)" class="button button--small" type="button" name="button" :key="note.createdAt">{{ clock(note.createdAt) }}</button>
         <button class="button button--small" :class="addClass" type="button" name="button" @click="toggleEdit()" key="+">{{ newInProgress ? (now.substring(0,5)) : '+' }}</button>
@@ -18,12 +17,13 @@
           </div>
         </div>
       </transition>
-    </div>
-    <div v-for="day in days">
-      <h2>{{ date(day.day) }}</h2>
-      <transition-group name="jump">
-        <button class="button button--small" v-for="note in day.notes" type="button" name="button" :key="note.createdAt" @click="show(day.notes)">{{ clock(note.createdAt) }}</button>
-      </transition-group>
+      <div class="box" v-if="display"> {{display.data}} </div>
+      <div v-for="day in days">
+        <h2>{{ date(day.day) }}</h2>
+        <transition-group name="jump">
+          <button class="button button--small" v-for="note in day.notes" type="button" name="button" :key="note.createdAt" @click="show(day.notes)">{{ clock(note.createdAt) }}</button>
+        </transition-group>
+      </div>
     </div>
   </div>
 </template>
@@ -87,22 +87,55 @@ export default {
 };
 </script>
 
-<style media="screen">
+<style media="screen" lang="scss">
+$color-negative: #ff6d56;
+$color-positive: #00d7d2;
+$color-gray: #c8c8c8;
+$color-white: #fff;
+$color-background: rgb(235, 241, 247);
+$color-dark: #231a3d;
+
 * {
   font-family: 'Montserrat', sans-serif;
+  color: #1633ff;
+}
+body {
+  background: linear-gradient(90deg, #0069ff, #1633ff);
 }
 textarea {
-  width: 600px;
   height: 120px;
-  border: 3px solid #cccccc;
   padding: 5px;
-  font-family: Tahoma, sans-serif;
-  background: #fff;
+  border: 1px solid $color-gray;
+  background: $color-white;
+  font-size: 16px;
   resize: none;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
-
+.wrapper {
+  padding: 0% 35% 0% 35%;
+}
+::-webkit-scrollbar {
+  width: 0px; /* remove scrollbar space */
+  background: transparent; /* optional: just make scrollbar invisible */
+}
 .content {
-  padding: 10% 35% 0% 35%;
+  height: 50%;
+  margin: auto;
+  position: absolute;
+  overflow-x: hidden;
+  top: 0;
+  bottom: 0;
+  left: 25%;
+  right: 25%;
+  padding: 5%;
+  border-radius: 10px;
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.1);
+  background: $color-white;
 }
 
 .button {
@@ -113,56 +146,70 @@ textarea {
   font-weight: 700;
   font-size: 15px;
   text-shadow: none;
-  background: #4d6af9;
-  color: white;
-  border: 1px solid rgb(166, 194, 204);
+  border: 1px solid $color-gray;
   cursor: pointer;
   border-radius: 3px;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
+  }
+  &--negative {
+    color: $color-negative;
+    border-color: $color-negative;
+    background: none;
+  }
+  &--positive {
+    color: $color-positive;
+    border-color: $color-positive;
+    background: none;
+  }
+  &--small {
+    color: $color-dark;
+    margin: 6px 6px 0px 0px;
+    width: 60px;
+    padding: 6px;
+    background: none;
+  }
+  &--add {
+    color: rgba(0, 0, 0, 0.5);
+    &:hover {
+      border-color: $color-positive;
+      color: $color-positive;
+    }
+  }
+  &--remove {
+    color: rgba(0, 0, 0, 0.5);
+    &:hover {
+      border-color: $color-negative;
+    }
+  }
 }
-.button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
-}
-.button--negative {
-  background-color: #ff6d56;
-}
-.button--positive {
-  background-color: #00d672;
-}
-.button--small {
-  color: black;
-  margin: 6px 6px 0px 0px;
-  width: 60px;
-  padding: 6px;
-  background: none;
-}
-.button--add {
-  color: rgba(0, 0, 0, 0.5);
-}
-.button--add:hover {
-  border-color: #00d672;
-  color: #00d672;
-}
-.button--remove {
-  color: rgba(0, 0, 0, 0.5);
-}
-.button--remove:hover {
-  border-color: #ff6d56;
-}
-
-textarea {
-  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
-  padding: 5px;
-  margin-top: 12px;
-  margin-bottom: 12px;
+.box {
+  background-color: $color-white;
+  border: 1px solid $color-gray;
+  border-radius: 5px;
+  padding: 20px;
   width: 100%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
+  margin-top: 10px;
+  // .arrow {
+  //   border-style: solid;
+  //   position: absolute;
+  // }
 }
 
-body {
-  margin: auto;
-  background-color: rgb(235, 241, 247);
-}
+// .bottom {
+//   border-color: #c8c8c8 transparent transparent transparent;
+//   border-width: 8px 8px 0px 8px;
+//   bottom: -8px;
+//   &:after {
+//     border-color: #f8f8f8 transparent transparent transparent;
+//     border-style: solid;
+//     border-width: 7px 7px 0px 7px;
+//     bottom: 1px;
+//     content: '';
+//     position: absolute;
+//     left: -7px;
+//   }
+// }
 </style>
